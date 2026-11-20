@@ -11,7 +11,8 @@ def train_model():
         iris.data,
         iris.target,
         test_size=0.2,
-        random_state=42
+        random_state=42,
+        stratify=iris.target,
     )
 
     model = LogisticRegression(max_iter=200)
