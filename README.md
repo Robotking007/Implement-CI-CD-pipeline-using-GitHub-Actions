@@ -10,7 +10,7 @@ Code Commit -> Build -> Test -> Deploy
 
 The workflow runs on every push or pull request to the `main` branch:
 
-1. **Test job (CI):** checks out the code, sets up Python 3.11, installs dependencies and runs `pytest`.
+1. **Test job (CI):** checks out the code, sets up Python 3.11, installs dependencies, checks Python syntax and runs `pytest`.
 2. **Deploy job (CD):** runs only if the tests pass and the code is on `main`. Deployment is simulated with `echo`.
 
 If the tests fail, the pipeline stops and deployment is skipped.
@@ -30,14 +30,15 @@ mlops-cicd/
 ## Run Locally
 
 ```bash
-pip install -r requirements.txt
-python src/model.py      # prints the model accuracy
-pytest -v                # runs the unit tests
+python -m pip install -r requirements.txt
+python app.py
+python -m compileall -q app.py src tests
+python -m pytest -v
 ```
 
 ## Test Rule
 
-`tests/test_model.py` asserts that model accuracy is at least `0.80`. Changing the threshold to `0.99` makes the test fail, which demonstrates that deployment is blocked when validation fails.
+`tests/test_model.py` asserts that model accuracy is at least `0.80`. The fixed Iris split scores about `0.9667`, so temporarily raising the threshold to `0.99` demonstrates that a failed test blocks deployment. Restore `0.80` after the demonstration.
 
 ## Viewing Pipeline Results
 
